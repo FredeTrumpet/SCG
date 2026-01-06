@@ -1,5 +1,9 @@
+import objectHierarchy.MainPlayer;
+import org.lwjgl.opengl.GL11;
 import render.Renderer;
-import render.obj.*;
+import render.obj.Camera;
+import render.obj.Layer;
+import render.obj.Window;
 
 public class StartGame {
     public static void main(String[] args) {
@@ -7,6 +11,8 @@ public class StartGame {
         initializeAllSingletons();
 
         loadAllSprites();
+
+        setUpGameObjsForGame();
 
         gameLoop();
 
@@ -30,9 +36,15 @@ public class StartGame {
         }
     }
 
+    public static void setUpGameObjsForGame(){
+        Layer.getInstance().addGameObjToLayers(MainPlayer.getInstance());
+
+
+    }
+
     public static void update() {
         //all game logic
-
+        Camera.getInstance().follow(MainPlayer.getInstance());
         //playerUpdate
         //enemyUpdate
 
@@ -42,14 +54,20 @@ public class StartGame {
 
     public static void render() {
         //all stuff to render, need to make layer instance
+        GL11.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
+        Layer.getInstance().renderGameObjs();
 
 
     }
 
     public static void initializeAllSingletons(){
-        Window.initialize(1280, 720, "My Game");
+        Window.initialize();
         Renderer.initialize();
+        Layer.initialize();
+        Camera.initialize();
+        MainPlayer.initialize();
 
 
 
@@ -58,6 +76,7 @@ public class StartGame {
 
     public static void loadAllSprites(){
         //insert all sprites into render
+        Renderer.getInstance().addTextures("testTexture","src/main/resources/slime/SLIMEMOVERIGHT1.png");
 
 
     }

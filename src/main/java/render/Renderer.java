@@ -18,7 +18,6 @@ public class Renderer {
     private static Renderer instance;
     private int vaoId, vboId, eboId;
     private Shader shader;
-    private Camera camera;
     private final Map<String, Integer> gameObjTextures = new HashMap<>();
 
 
@@ -43,10 +42,6 @@ public class Renderer {
     }
 
 
-
-    public void addCamera(Camera camera){
-        this.camera = camera;
-    }
 
 
     public void setWindow() {
@@ -150,10 +145,10 @@ public class Renderer {
         shader.use();
 
         int screenLoc = GL20.glGetUniformLocation(getShaderProgramId(), "screenSize");
-        GL20.glUniform2f(screenLoc, window.getWidth(), window.getHeight());
+        GL20.glUniform2f(screenLoc, Window.getInstance().getSize().width(), Window.getInstance().getSize().height());
 
         int offsetLoc = GL20.glGetUniformLocation(getShaderProgramId(), "offset");
-        GL20.glUniform2f(offsetLoc, gameObj.getSprite().bottomLeftCorner().x() - camera.getX(), gameObj.getSprite().bottomLeftCorner().y() - camera.getY());
+        GL20.glUniform2f(offsetLoc, gameObj.getSprite().bottomLeftCorner().x() - Camera.getInstance().getX(), gameObj.getSprite().bottomLeftCorner().y() - Camera.getInstance().getY());
 
         int scaleLoc = GL20.glGetUniformLocation(getShaderProgramId(), "scale");
         GL20.glUniform2f(scaleLoc, gameObj.getSprite().size().width(), gameObj.getSprite().size().height());

@@ -1,5 +1,6 @@
 package render.obj;
 
+import entity.RectangleSize;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
@@ -8,21 +9,19 @@ public class Window {
     private static Window instance;
 
     private long handle;
-    private int width;
-    private int height;
+    private RectangleSize size;
     private String title;
 
-    private Window(int width, int height, String title) {
-        this.width = width;
-        this.height = height;
-        this.title = title;
+    private Window() {
+        size = new RectangleSize(1280, 720);
+        this.title = "THE GAME, PUT AT TOP OF WINDOWS WHEN BORDERLESS";
     }
 
-    public static void initialize(int width, int height, String title) {
+    public static void initialize() {
         if (instance != null) {
             throw new IllegalStateException("Window already initialized");
         }
-        instance = new Window(width, height, title);
+        instance = new Window();
         instance.init();
     }
 
@@ -38,7 +37,7 @@ public class Window {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
-        handle = GLFW.glfwCreateWindow(width, height, title, 0, 0);
+        handle = GLFW.glfwCreateWindow((int)size.width(),(int)size.height(), title, 0, 0);
         if (handle == 0) {
             throw new RuntimeException("Failed to create GLFW window");
         }
@@ -63,11 +62,8 @@ public class Window {
         instance = null;
     }
 
-    public int getWidth() {
-        return width;
-    }
-    public int getHeight() {
-        return height;
+    public RectangleSize getSize() {
+        return size;
     }
 
     public long getHandle() {
